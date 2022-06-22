@@ -59,7 +59,6 @@ export default function App() {
     })
     .catch((error) => {
       console.log(error.message)
-      redirectToLogin()
     })
   }
 
@@ -78,7 +77,6 @@ export default function App() {
     .get(articlesUrl)
     .then((response) => {
       console.log(response);
-      //res.data.articles
       setArticles(response.data.articles)
       setMessage(response.data.message)
     })
@@ -87,6 +85,7 @@ export default function App() {
     })
     .catch((error) => {
       console.log(error.message)
+      redirectToLogin()
     })
   }
 
