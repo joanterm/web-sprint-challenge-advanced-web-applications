@@ -6,6 +6,7 @@ import Message from './Message'
 import ArticleForm from './ArticleForm'
 import Spinner from './Spinner'
 import axios from "axios"
+import axiosWithAuth from "../axios"
 
 const articlesUrl = 'http://localhost:9000/api/articles'
 const loginUrl = 'http://localhost:9000/api/login'
@@ -19,14 +20,17 @@ export default function App() {
 
   // ✨ Research `useNavigate` in React Router v.6
   const navigate = useNavigate()
-  const redirectToLogin = () => { /* ✨ implement */ }
+  const redirectToLogin = () => { 
+    /* ✨ implement */ 
+    navigate("/")
+  }
+
   const redirectToArticles = () => { 
     /* ✨ implement */ 
     navigate("/articles")
   }
 
   const logout = () => {
-    console.log("works")
     // ✨ implement
     // If a token is in local storage it should be removed,
     // and a message saying "Goodbye!" should be set in its proper state.
@@ -46,7 +50,7 @@ export default function App() {
     axios
     .post(loginUrl, {username, password})
     .then((response) => {
-      console.log(response)
+      // console.log(response)
       localStorage.setItem("token", response.data.token)
       redirectToArticles()
     })
@@ -55,6 +59,7 @@ export default function App() {
     })
     .catch((error) => {
       console.log(error.message)
+      redirectToLogin()
     })
   }
 
@@ -67,6 +72,22 @@ export default function App() {
     // If something goes wrong, check the status of the response:
     // if it's a 401 the token might have gone bad, and we should redirect to login.
     // Don't forget to turn off the spinner!
+    setMessage("")
+    setSpinnerOn(true)
+    axiosWithAuth()
+    .get(articlesUrl)
+    .then((response) => {
+      console.log(response);
+      //res.data.articles
+      setArticles(response.data.articles)
+      setMessage(response.data.message)
+    })
+    .then(() => {
+      setSpinnerOn(false)
+    })
+    .catch((error) => {
+      console.log(error.message)
+    })
   }
 
   const postArticle = article => {
@@ -102,7 +123,10 @@ export default function App() {
           <Route path="articles" element={
             <>
               <ArticleForm />
-              <Articles />
+              <Articles 
+                getArticles={getArticles}
+                articles={articles}
+              />
             </>
           } />
         </Routes>
