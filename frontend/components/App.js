@@ -5,6 +5,7 @@ import LoginForm from './LoginForm'
 import Message from './Message'
 import ArticleForm from './ArticleForm'
 import Spinner from './Spinner'
+import axios from "axios"
 
 const articlesUrl = 'http://localhost:9000/api/articles'
 const loginUrl = 'http://localhost:9000/api/login'
@@ -19,7 +20,10 @@ export default function App() {
   // ✨ Research `useNavigate` in React Router v.6
   const navigate = useNavigate()
   const redirectToLogin = () => { /* ✨ implement */ }
-  const redirectToArticles = () => { /* ✨ implement */ }
+  const redirectToArticles = () => { 
+    /* ✨ implement */ 
+    navigate("/articles")
+  }
 
   const logout = () => {
     console.log("works")
@@ -36,7 +40,22 @@ export default function App() {
     // and launch a request to the proper endpoint.
     // On success, we should set the token to local storage in a 'token' key,
     // put the server success message in its proper state, and redirect
-    // to the Articles screen. Don't forget to turn off the spinner!
+    // to the Articles screen. Don't forget to turn off the spinner!    
+    setMessage("")
+    setSpinnerOn(true)
+    axios
+    .post(loginUrl, {username, password})
+    .then((response) => {
+      console.log(response)
+      localStorage.setItem("token", response.data.token)
+      redirectToArticles()
+    })
+    .then(() => {
+      setSpinnerOn(false)
+    })
+    .catch((error) => {
+      console.log(error.message)
+    })
   }
 
   const getArticles = () => {
@@ -70,16 +89,16 @@ export default function App() {
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
     <>
       <Spinner />
-      <Message />
+      <Message message={message}/>
       <button id="logout" onClick={logout}>Logout from app</button>
       <div id="wrapper" style={{ opacity: spinnerOn ? "0.25" : "1" }}> {/* <-- do not change this line */}
         <h1>Advanced Web Applications</h1>
         <nav>
-          <NavLink id="loginScreen" to="/">Login</NavLink>
+          <NavLink id="loginScreen" to="/" >Login</NavLink>
           <NavLink id="articlesScreen" to="/articles">Articles</NavLink>
         </nav>
         <Routes>
-          <Route path="/" element={<LoginForm />} />
+          <Route path="/" element={<LoginForm login={login}/>} />
           <Route path="articles" element={
             <>
               <ArticleForm />
