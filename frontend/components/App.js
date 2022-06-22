@@ -99,7 +99,7 @@ export default function App() {
     axiosWithAuth()
     .post(articlesUrl, article)
     .then((response) => {
-      console.log(response)
+      // console.log(response)
       setArticles([
         ...articles,
         response.data.article
@@ -111,6 +111,11 @@ export default function App() {
       console.log(error)
     })
   }
+
+//   [PUT] http://localhost:9000/api/articles/:article_id
+// Expects an Authorization request header containing a valid auth token
+// Expects a payload with the following properties: title, text, topic
+// Example of payload: { "title": "foo", "text": "bar", "topic": "React" }
 
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
@@ -139,10 +144,14 @@ export default function App() {
             <>
               <ArticleForm 
                 postArticle={postArticle}
+                currentArticleId={articles.find((item) => {
+                  return item.article_id === currentArticleId
+                })}
               />
               <Articles 
                 getArticles={getArticles}
                 articles={articles}
+                setCurrentArticleId={setCurrentArticleId}
               />
             </>
           } />
