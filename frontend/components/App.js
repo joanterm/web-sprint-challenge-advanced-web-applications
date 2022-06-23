@@ -112,11 +112,6 @@ export default function App() {
     })
   }
 
-//   [PUT] http://localhost:9000/api/articles/:article_id
-// Expects an Authorization request header containing a valid auth token
-// Expects a payload with the following properties: title, text, topic
-// Example of payload: { "title": "foo", "text": "bar", "topic": "React" }
-
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
     // You got this!
@@ -144,8 +139,24 @@ export default function App() {
     })
   }
 
+
   const deleteArticle = article_id => {
     // ✨ implement
+    setMessage("")
+    setSpinnerOn(false)
+    axiosWithAuth()
+    .delete(`${articlesUrl}/${article_id}`)
+    .then((response) => {
+      console.log(response)
+      setArticles(articles.filter((item) => {
+        return item.article_id !== article_id
+      }))
+      setSpinnerOn(false)
+      setMessage(response.data.message)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
   }
 
   return (
@@ -175,6 +186,7 @@ export default function App() {
                 getArticles={getArticles}
                 articles={articles}
                 setCurrentArticleId={setCurrentArticleId}
+                deleteArticle={deleteArticle}
               />
             </>
           } />

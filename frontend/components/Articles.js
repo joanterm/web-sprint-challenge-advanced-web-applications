@@ -4,7 +4,7 @@ import PT from 'prop-types'
 
 export default function Articles(props) {
   // ✨ where are my props? Destructure them here
-  const {getArticles, articles, setCurrentArticleId} = props
+  const {getArticles, articles, setCurrentArticleId, deleteArticle} = props
 
   // ✨ implement conditional logic: if no token exists
   // we should render a Navigate to login screen (React Router v.6)
@@ -33,7 +33,7 @@ export default function Articles(props) {
                 </div>
                 <div>
                   <button disabled={false} onClick={() => setCurrentArticleId(art.article_id)}>Edit</button>
-                  <button disabled={true} onClick={Function.prototype}>Delete</button>
+                  <button disabled={false} onClick={() => deleteArticle(art.article_id)}>Delete</button>
                 </div>
               </div>
             )
