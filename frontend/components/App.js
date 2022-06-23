@@ -120,6 +120,28 @@ export default function App() {
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
     // You got this!
+    setMessage("")
+    setSpinnerOn(true)
+    axiosWithAuth()
+    .put(`${articlesUrl}/${article_id}`, article)
+    .then((response => {
+      console.log(response);
+      setArticles(articles.map((item) => {
+        if(item.article_id === response.data.article.article_id) {
+          return response.data.article
+        } else {
+          return item
+        }
+      }))
+      setCurrentArticleId()
+      setMessage(response.data.message)
+    }))
+    .then(() => {
+      setSpinnerOn(false)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
   }
 
   const deleteArticle = article_id => {
@@ -147,6 +169,7 @@ export default function App() {
                 currentArticleId={articles.find((item) => {
                   return item.article_id === currentArticleId
                 })}
+                updateArticle={updateArticle}
               />
               <Articles 
                 getArticles={getArticles}

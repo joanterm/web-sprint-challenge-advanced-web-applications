@@ -5,7 +5,7 @@ const initialFormValues = { title: '', text: '', topic: '' }
 
 export default function ArticleForm(props) {
   // ✨ where are my props? Destructure them here
-  const {postArticle, currentArticleId} = props
+  const {postArticle, currentArticleId, updateArticle} = props
 
   const [values, setValues] = useState(initialFormValues)
 
@@ -35,7 +35,15 @@ export default function ArticleForm(props) {
     // ✨ implement
     // We must submit a new post or update an existing one,
     // depending on the truthyness of the `currentArticle` prop.
-    postArticle(values)
+    if (currentArticleId) {
+      updateArticle({
+        article_id: currentArticleId.article_id,
+        article: values
+      })
+    } else {
+      postArticle(values)
+      setValues(initialFormValues)
+    }
   }
 
   const isDisabled = () => {
