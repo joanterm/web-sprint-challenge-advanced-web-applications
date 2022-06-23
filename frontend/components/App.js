@@ -30,12 +30,21 @@ export default function App() {
     navigate("/articles")
   }
 
+  // - redirection to the login screen
+  // - the "token" key is removed from local storage
+  // - a success message renders on the page
+
   const logout = () => {
     // ✨ implement
     // If a token is in local storage it should be removed,
     // and a message saying "Goodbye!" should be set in its proper state.
     // In any case, we should redirect the browser back to the login screen,
     // using the helper above.
+    if (window.localStorage.getItem("token")) {
+      localStorage.removeItem("token")
+      setMessage("Goodbye!")
+      redirectToLogin()
+    }
   }
 
   const login = ({ username, password }) => {
